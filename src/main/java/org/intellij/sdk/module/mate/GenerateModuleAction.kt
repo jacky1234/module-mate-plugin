@@ -23,10 +23,7 @@ class GenerateModuleAction : AnAction() {
         }
 
         try {
-            val forName = Class.forName("org.intellij.sdk.module.mate.config.Config")
-            println(forName.toString())
-
-            val moduleTemplates = ModuleTemplateReader.readModuleTemplates(basePath)
+            val moduleTemplates = ModuleTemplateReader.readModuleTemplates(basePath, moduleBaseName)
             WriteCommandAction.runWriteCommandAction(project) {
                 ModuleTemplateWriter.writeModuleTemplates(moduleTemplates, moduleBaseName, basePath)
             }

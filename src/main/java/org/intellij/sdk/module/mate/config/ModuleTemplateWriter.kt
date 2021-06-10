@@ -30,7 +30,7 @@ object ModuleTemplateWriter {
             projectRoot.resolve(genDir).resolve(moduleResolvedName)
         }
 
-        writeDirectories(config.directories, projectDir)
+        writeConfigDirectories(config.directories, projectDir)
         writeStaticFiles(template, projectDir)
         writeTemplateFiles(template, projectDir, moduleConfig)
         val gradleSettings = writeGradleSettings(config.name, projectRoot, genDir)
@@ -39,28 +39,34 @@ object ModuleTemplateWriter {
         LocalFileSystem.getInstance().refreshIoFiles(filesToRefresh)
     }
 
-    private fun writeDirectories(paths: List<String>, root: File) {
+    private fun writeConfigDirectories(paths: List<String>, root: File) {
         paths.map { root.resolve(it) }
             .forEach { Files.createDirectories(it.toPath()) }
     }
 
+//    private fun writeTemplateDirectories(template: ModuleTemplate, moduleDirectory: File) {
+//        template.templateResources.fileMaps.filterNot { it.isFile }.forEach { fileMap ->
+//            val target = getRelativeToModule(fileMap.dest, template.staticResources, moduleDirectory)
+//            Files.createDirectories(target.toPath())
+//        }
+//    }
+
     private fun writeStaticFiles(template: ModuleTemplate, moduleDirectory: File) {
-        template.staticResources.files.forEach { file ->
-            val target = getRelativeToModule(file, template.staticResources, moduleDirectory)
-            file.copyTo(target, overwrite = true)
+        template.staticResources.fileMaps.forEach { fileMap ->
+            val target = getRelativeToModule(fileMap.dest, template.staticResources, moduleDirectory)
+            fileMap.source.copyTo(target, overwrite = true)
         }
     }
 
     private fun writeTemplateFiles(template: ModuleTemplate, moduleDirectory: File, config: ModuleConfig) {
         val templateProperties = mapOf(Settings.moduleTemplateKey to config)
         val templateResources = template.templateResources
-        templateResources.files
-            .filterNot { it.isDirectory }
+        templateResources.fileMaps
             .forEach { templateFile ->
-                val targetFile = getRelativeToModule(templateFile, template.templateResources, moduleDirectory)
+                val targetFile = getRelativeToModule(templateFile.dest, template.templateResources, moduleDirectory)
                 targetFile.parentFile.mkdirs()
                 targetFile.createNewFile()
-                TemplateResolver.resolveTemplate(templateFile, targetFile, templateProperties)
+                TemplateResolver.resolveTemplate(templateFile.source, targetFile, templateProperties)
             }
     }
 

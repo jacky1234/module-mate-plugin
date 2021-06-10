@@ -4,6 +4,8 @@
 
 
 
+![image-20210610075844098](https://raw.githubusercontent.com/jacky1234/picArchieve/master/uPic/image-20210610075844098.png)
+
 
 
 ## Usage
@@ -13,9 +15,7 @@ To make it works, follow these steps:
 > 2. Create subdirectories in that folder. Their names don't matter.
 > 3. Inside of each folder create a <em>config.yml</em> file and define a name of your module. A template of config.yml can be seen below root project. The file name is config.yml.tl
 > 4. Also, create additional folders **static** and **template** and put your files in them.
-
-
-
+s
 **Config.yml**
 
 You can add configuration in this file. Take the following as examples:
@@ -36,13 +36,5 @@ directories:
 The key explain as follows:
 
 - name : the module's name
-- genDir : where the module will be generated
+- genDir :  the module will be generated
 - directories : the dirs to be generated
-
-
-
-## Todo
-
-The plugin is not support module baseName named in directory , It will come soon if necessary
-
-![image-20210608141011766](https://raw.githubusercontent.com/jacky1234/picArchieve/master/uPic/image-20210608141011766.png)
